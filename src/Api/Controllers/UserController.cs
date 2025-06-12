@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers;
+namespace Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class UserController : ControllerBase
@@ -14,8 +16,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(Name = "GetUser")]
-    public bool Get()
+    public IActionResult Get()
     {
-        return true;
+        var claims = User.Claims.Select(c => new { c.Type, c.Value });
+        return Ok(new { Message = "Authenticated via GitHub", Claims = claims });
     }
 }
